@@ -22,13 +22,6 @@ pipeline{
             }
         }
 
-        stage("Pylint"){
-            steps{
-                echo "[INFO] Pylint verification"
-                sh 'pylint pylint *.py .'
-            }
-        }
-
         stage("Sonar Analysis"){
             steps{
                 echo "[INFO] Sonar Analysis"
