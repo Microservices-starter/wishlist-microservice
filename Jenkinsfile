@@ -16,7 +16,7 @@ pipeline{
     }
 
     tools{
-        sonarscanner = 'sonarscanner'
+        sonarscanner = 'scannerHome'
     }
 
     stages{
@@ -32,7 +32,7 @@ pipeline{
                 echo "[INFO] Performing analysis with Sonarqube"
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken'){
-                        sh 'sonarscanner/bin/sonar-scanner -Dsonar.projectKey=$project'
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=$project"
                     }
                 }
             }
