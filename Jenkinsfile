@@ -7,7 +7,7 @@ pipeline{
     agent any
 
     options{
-        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     environment{
@@ -25,7 +25,10 @@ pipeline{
         stage("Sonar Analysis"){
             steps{
                 echo "[INFO] Sonar Analysis"
-                sh 'sonar-scanner -X -Dsonar.projectKey=wishlist'
+                def scannerHome = tool 'sonar-scanner';
+                withSonarQubeEnv("sonar-server"){
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
             }
         }
 
