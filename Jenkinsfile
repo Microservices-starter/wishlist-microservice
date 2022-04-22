@@ -11,23 +11,19 @@ pipeline{
 
     environment{
         GIT_COMMIT_HASH = getVersion()
-        host = "$host"
-        sonar_pass = "$sonar_pass"
-        sonar_user = "$sonar_user"
+        project = "$project"
+
+    }
+
+    tools{
+        sonarscanner = 'sonarscanner'
     }
 
     stages{
         stage("Code checkout"){
             steps{
                 echo "[INFO] Checking out latest code from git"
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/Microservices-starter/zuul-api-gateway.git'                
-            }
-        }
-
-        stage("Unit Tests"){
-            steps{
-                echo "[INFO] Performing tests"
-                sh 'mvn clean test'
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/Microservices-starter/wishlist-microservice.git'                
             }
         }
 
@@ -36,8 +32,7 @@ pipeline{
                 echo "[INFO] Performing analysis with Sonarqube"
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken'){
-                        sh 'mvn clean verify sonar:sonar -Dsonar.host.url=$host -Dsonar.login=$sonar_user -Dsonar.password=$sonar_pass'
-                        sh 'cat target/sonar/report-task.txt'
+                        sh 'sonarscanner/bin/sonar-scanner -Dsonar.projectKey=$project'
                     }
                 }
             }
@@ -56,7 +51,7 @@ pipeline{
         stage("Docker build"){
             steps{
                 echo "[INFO] Building Docker images"
-                sh 'docker build -t rajputmarch2020/zuul_apigw:$GIT_COMMIT_HASH .'
+                sh 'docker build -t rajputmarch2020/wishlist:$GIT_COMMIT_HASH .'
             }
         }
 
@@ -66,7 +61,7 @@ pipeline{
                 withCredentials([string(credentialsId: 'dockerhub', variable: 'password')]){
                     sh 'docker login -u rajputmarch2020 -p ${password} '
                 }
-                    sh 'docker push rajputmarch2020/zuul_apigw:$GIT_COMMIT_HASH'
+                    sh 'docker push rajputmarch2020/wishlist:$GIT_COMMIT_HASH'
             }
         }
     }
@@ -74,7 +69,6 @@ pipeline{
     post{
         always{
             echo "========always========"
-            junit 'target/surefire-reports/**/*.xml'
         }
         success{
             echo "========pipeline executed successfully ========"
