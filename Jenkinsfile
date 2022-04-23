@@ -52,6 +52,13 @@ pipeline{
             }
         }
 
+        stage("Trivy Scan"){
+            steps{
+                echo "[INFO] Scanning image with Trivy"
+                sh 'trivy image rajputmarch2020/wishlist:$GIT_COMMIT_HASH'
+            }
+        }
+
         stage("Docker push"){
             steps{
                 echo "[INFO] Pushing Docker images to Dockerhub"
@@ -59,6 +66,16 @@ pipeline{
                     sh 'docker login -u rajputmarch2020 -p ${password} '
                 }
                     sh 'docker push rajputmarch2020/wishlist:$GIT_COMMIT_HASH'
+            }
+        }
+
+        stage("Teardown"){
+            steps{
+                echo "[INFO] Deleting Docker images after pushed to Dockerhub"
+                sh ''' 
+                  docker rmi rajputmarch2020/wishlist:$GIT_COMMIT_HASH
+                  docker image prune -f
+                '''
             }
         }
     }
