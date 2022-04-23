@@ -12,11 +12,8 @@ pipeline{
     environment{
         GIT_COMMIT_HASH = getVersion()
         project = "$project"
+        scannerHome = "${JENKINS_HOME}"
 
-    }
-
-    tools{
-        sonarscanner = 'scannerHome'
     }
 
     stages{
