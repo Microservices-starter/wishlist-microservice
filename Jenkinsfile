@@ -6,7 +6,7 @@ pipeline{
     agent any
 
     options{
-        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     environment{
@@ -29,7 +29,7 @@ pipeline{
                 echo "[INFO] Performing analysis with Sonarqube"
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken'){
-                        sh "${scannerHome}/sonar-scanner/bin -Dsonar.projectKey=$project"
+                        sh "sudo ${scannerHome}/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=$project"
                     }
                 }
             }
