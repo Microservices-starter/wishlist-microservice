@@ -73,5 +73,8 @@ pipeline{
         failure{
             echo "========pipeline execution failed========"
         }
+        changed{
+            echo "============Build has changed from last time=============="
+        }
     }
 }
