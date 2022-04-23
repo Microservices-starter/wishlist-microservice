@@ -29,7 +29,7 @@ pipeline{
                 echo "[INFO] Performing analysis with Sonarqube"
                 script{
                     withSonarQubeEnv(credentialsId: 'sonartoken'){
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=$project"
+                        sh "${scannerHome}/sonar-scanner/bin -Dsonar.projectKey=$project"
                     }
                 }
             }
