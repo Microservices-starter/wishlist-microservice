@@ -78,7 +78,20 @@ pipeline{
                 '''
             }
         }
+
+        stage("Helm charts Config check"){
+            steps{
+                echo "[INFO] Checking Helm chart config"
+                script{
+                    dir('helm-charts'){
+                        withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']){
+                            sh 'helm datree test wishlist/'
+                    }
+                }
+            }
+        }
     }
+}
 
     post{
         always{
