@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: rajputmarch2020/wishlist
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: ClusterIP
+  port: 1003
+  targetport: 5000
+  name: wishlist
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+container:
+  name: wishlist
